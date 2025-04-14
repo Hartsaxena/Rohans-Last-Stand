@@ -1,0 +1,18 @@
+Thank you for playing Rohan's Last Stand! Before you begin, here are the rules of the game:
+
+1. Each player starts with 20 health.
+2. Each player has a deck of cards, which are drawn from at the start of the game and during the game.
+3. Each player has a hand of cards, which are played onto the board.
+5. Most cards have 3 attributes - health, attack, and defense.
+
+Attack and defense are used to calculate damage during an Assault, while health is used to determine if a card is destroyed.
+Some cards have another attribute - special abilities. These are used to determine how the card interacts with other cards.
+Examples include buffing, debuffing, and armor shredding.
+
+4. Each player can play a card from their hand onto the board in an empty position.
+5. The players alternate turns before an Assault, playing as many cards as they want before passing their turn, allowing the other to play.
+6. After each player has played their cards, an Assault takes place
+7. During an Assault, each card on the board attacks the opposing cards in the corresponding position.
+8. If a card's health reaches 0, it is removed from the board.
+9. If a card is not present in the corresponding position, the opposing card attacks the player's health directly.
+10. The game ends when one player's health reaches 0.
