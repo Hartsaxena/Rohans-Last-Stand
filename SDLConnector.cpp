@@ -66,6 +66,9 @@ std::map<SpecialAbility, std::string> CardGraphic::specialAbilityNames = {
     {NONE, "None"},
     {SURPRISE, "Surprise"},
     {INSPIRE, "Inspire"},
+    {REINFORCE, "Reinforce"},
+    {RALLY, "Rally"},
+    {HATE, "Hate"},
     {ARMOR_PIERCE, "Armor Pierce"},
     {KAMIKAZE, "Kamikaze"}
 };

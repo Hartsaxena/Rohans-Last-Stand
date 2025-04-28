@@ -20,9 +20,13 @@ std::map<CardID, CardType> Board::cardRegistry = {
     {RECRUIT, {RECRUIT, "Recruit", 3, 2, 2}},
     {ELVEN_SOLDIER, {ELVEN_SOLDIER, "Elf Soldier", 4, 4, 0, ARMOR_PIERCE}},
     {LOCKBEARER, {LOCKBEARER, "Lockbearer", 10, 6, 4, INSPIRE, DEFENSE_ONLY}},
+    {THE_WHITE, {THE_WHITE, "The White", 24, 8, 0, REINFORCE}},
+    {KING, {KING, "The King", 9, 5, 5, INSPIRE}},
 
     {URUK, {URUK, "Uruk-Hai", 3, 4, 1} },
-    {ORC, {ORC, "Orc", 2, 3, 0}},
+    {ORC, {ORC, "Orc", 3, 3, 0}},
+    {DUNLENDING, {DUNLENDING, "Dunlending", 3, 2, 1, HATE}},
+    {BERSERKER, {BERSERKER, "Berserker", 9, 5, 3, RALLY}}
     {BATTERING_RAM, {BATTERING_RAM, "Battering Ram", 2, 8, 1, SURPRISE, ATTACK_ONLY}},
     {FELGROM, {FELGROM, "Felgrom", 1, 10, 1, KAMIKAZE, ATTACK_ONLY}},
 };
@@ -33,13 +37,17 @@ std::map<CardID, int> Board::playerDeckRegistry = {
     {RECRUIT, 10},
     {ELVEN_SOLDIER, 5},
     {LOCKBEARER, 2},
+    {THE_WHITE, 1},
+    {KING, 1}
 };
 
 std::map<CardID, int> Board::enemyDeckRegistry = {
     {URUK, 10},
     {ORC, 20},
+    {DUNLENDING, 10},
+    {BERSERKER, 8},
     {BATTERING_RAM, 2},
-    {FELGROM, 1},
+    {FELGROM, 2},
 };
 
 Card::Card(CardType type) : type(type) {

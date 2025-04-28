@@ -13,15 +13,19 @@ enum CardID {
     BLANK = -1, // Blank card
 
     // Player
-    STRIDER,
+    STRIDER, // Aragorn
     ELVEN_PRINCE, // Legolas
     RECRUIT,
     ELVEN_SOLDIER,
     LOCKBEARER, // Gimli, in case I forget
+    THE_WHITE, // Gandalf
+    KING, // Theoden
 
     // Enemy
     URUK,
     ORC,
+    DUNLENDING,
+    BERSERKER,
     BATTERING_RAM,
     FELGROM,
 };
@@ -32,9 +36,12 @@ enum SpecialAbility {
     // Abilities that are applied when played.
     SURPRISE,
     INSPIRE,
+    REINFORCE,
+    RALLY, // Enemy version of Inspire
 
     // Abilities that are applied during assault.
     ARMOR_PIERCE,
+    HATE,
     KAMIKAZE,
 };
 
