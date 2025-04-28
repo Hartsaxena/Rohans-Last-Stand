@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\Card Images">
+      <UniqueIdentifier>{16285d5d-ccaf-4d54-98a4-e51ee5d42220}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DLLs">
+      <UniqueIdentifier>{e7e2a2df-132d-4171-bcf2-6b838e465b3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Render.hpp">
@@ -63,5 +69,30 @@
     <Text Include="Rules.txt">
       <Filter>Resource Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="cards\Strider.png">
+      <Filter>Resource Files\Card Images</Filter>
+    </Image>
+    <Image Include="bg.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Cards\Recruit.png">
+      <Filter>Resource Files\Card Images</Filter>
+    </Image>
+    <Image Include="Cards\Elf Soldier.png">
+      <Filter>Resource Files\Card Images</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DLLs\SDL2.dll">
+      <Filter>DLLs</Filter>
+    </None>
+    <None Include="DLLs\SDL2_image.dll">
+      <Filter>DLLs</Filter>
+    </None>
+    <None Include="DLLs\SDL2_ttf.dll">
+      <Filter>DLLs</Filter>
+    </None>
   </ItemGroup>
 </Project>

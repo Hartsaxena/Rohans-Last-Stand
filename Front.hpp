@@ -28,6 +28,7 @@ public:
 
     bool getMouseButtonState(int button) const { return this->mouseState->ButtonStates[button]; }
     bool getMouseButtonPress(int button) const { return (std::count(this->mouseButtonPresses.begin(), this->mouseButtonPresses.end(), button) != 0); }
+    bool getMouseMove() const { return mouseMovement; }
     int getMouseX() const { return this->mouseState->x; }
     int getMouseY() const { return this->mouseState->y; }
 
@@ -37,6 +38,7 @@ private:
     SDL_Event* inputEvent;
     bool inputKeyStates[286]; // true = key held down, false = key not held down
     std::vector<SDL_Scancode> inputKeyPresses;
+    bool mouseMovement = false; // true = mouse moved, false = mouse not moved
 };
 
 
@@ -56,6 +58,7 @@ public:
 
     void PresentRenderer() const;
     void PauseDelay() const;
+    void ToggleFullscreen() const;
 
     int getScreenW() const { return this->screenW; }
     int getScreenH() const { return this->screenH; }

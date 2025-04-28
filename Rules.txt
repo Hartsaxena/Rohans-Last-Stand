@@ -11,8 +11,26 @@ Examples include buffing, debuffing, and armor shredding.
 
 4. Each player can play a card from their hand onto the board in an empty position.
 5. The players alternate turns before an Assault, playing as many cards as they want before passing their turn, allowing the other to play.
-6. After each player has played their cards, an Assault takes place
-7. During an Assault, each card on the board attacks the opposing cards in the corresponding position.
-8. If a card's health reaches 0, it is removed from the board.
-9. If a card is not present in the corresponding position, the opposing card attacks the player's health directly.
-10. The game ends when one player's health reaches 0.
+6. After each player has played their cards, an Assault takes place.
+    The Assault is a battle between the two players, where each card on the board attacks the opposing card in the same position.
+    If there is no opposing card in that position, the card attacks the player's health directly.
+7. After an assault, both players shuffle their decks
+8. If a card's health reaches 0, it is removed from the board and placed back into the bottom of the deck.
+9. The game ends when one player's health reaches 0.
+
+
+SPECIAL ABILITIES:
+
+Intro:
+    Many cards have special abilities that are automatically applied throughout the game. These vary from card to card.
+   
+   
+Special abilities are mainly split into two categories: Play-applied and Assault-applied.
+
+Play-applied:
+    These abilities are applied when the card is first played onto the board.
+    For example, a card with the ability "Inspire" will buff all other cards on the board when it is played.
+
+Assault Applied:
+    These abilities are applied every assault that the card participates in.
+    For example, a card with the ability "Armor Pierce" Will ignore the target's defense when attacking.

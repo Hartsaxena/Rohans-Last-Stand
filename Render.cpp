@@ -53,13 +53,13 @@ void Canvas::blankScreen() const
     this->fillScreenColor(BLACK);
 }
 
-void Canvas::drawRect(Rectangle* rect) const
+void Canvas::drawRect(const Rectangle* rect) const
 {
     this->drawEmptyRect(rect);
     SDL_RenderFillRect(renderer, &(rect->rect));
 }
 
-void Canvas::drawEmptyRect(Rectangle* emptyRect) const
+void Canvas::drawEmptyRect(const Rectangle* emptyRect) const
 {
     Color color = emptyRect->color;
     setColor(color);
@@ -71,9 +71,27 @@ void Canvas::drawLine(Position start, Position end, Color color) const {
     SDL_RenderDrawLine(renderer, start.x, start.y, end.x, end.y);
 }
 
+void Canvas::drawTextBox(TextBox* textBox) const {
+    int x = textBox->x;
+    int y = textBox->y;
+    int w = textBox->w;
+    int h = textBox->h;
+    int bsize = textBox->borderSize;
+    drawRect(x - bsize, y - bsize, w + (2 * bsize), h + (2 * bsize), textBox->borderColor);
+    drawRect(textBox);
+    renderTextCenter(
+        textBox->text, textBox->font, x + w / 2, y + h / 2, textBox->textColor
+    );
+}
+
+void Canvas::drawTextCounter(TextCounter* counter) const {
+    counter->setText(std::to_string(*counter->count));
+    this->drawTextBox(counter);
+}
+
 void Canvas::renderText(const std::string text, Font* font, int x, int y, Color color) const {
     // Create texture for text
-    SDL_Color colorObj = { color.r, color.g, color.b, color.alpha };
+    SDL_Color colorObj = { color.r, color.g, color.b, color.a };
     SDL_Surface* surface = TTF_RenderText_Solid(font->getFont(), text.c_str(), colorObj);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 
@@ -89,4 +107,15 @@ void Canvas::renderText(const std::string text, Font* font, int x, int y, Color 
     // Destroy temporary objects
     SDL_DestroyTexture(texture);
     SDL_FreeSurface(surface);
+}
+
+void Canvas::renderTextCenter(const std::string text, Font* font, int x, int y, Color color) const {
+    SDL_Surface* surface = TTF_RenderText_Solid(font->getFont(), text.c_str(), { color.r, color.g, color.b });
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
+    int textWidth, textHeight;
+    TTF_SizeText(font->getFont(), text.c_str(), &textWidth, &textHeight);
+    SDL_Rect destRect = { x - textWidth / 2, y - textHeight / 2, textWidth, textHeight };
+    SDL_RenderCopy(renderer, texture, nullptr, &destRect);
+    SDL_DestroyTexture(texture);
 }

@@ -12,13 +12,34 @@
  * {CardID, {name, maxHealth, attack, defense}}
  */
 std::map<CardID, CardType> Board::cardRegistry = {
-    {ARAGORN, {"Strider", 7, 7, 2}},
-    {ELVEN_SON, {"Elven Son", 4, 9, 0}},
-    {RECRUIT, {"Recruit", 3, 2, 2}},
 
-    {URUK, {"Uruk-Hai", 3, 4, 1}},
-    {ORC, {"Orc", 2, 3, 0}},
-    {BATTERING_RAM, {"Battering Ram", 2, 8, 1}},
+    // {NAME, {"Name", maxHealth, attack, defense, specialAbility, playCondition}}
+
+    {STRIDER, {STRIDER, "Strider", 7, 7, 2, INSPIRE}},
+    {ELVEN_PRINCE, {ELVEN_PRINCE, "Elven Prince", 4, 9, 0, ARMOR_PIERCE}},
+    {RECRUIT, {RECRUIT, "Recruit", 3, 2, 2}},
+    {ELVEN_SOLDIER, {ELVEN_SOLDIER, "Elf Soldier", 4, 4, 0, ARMOR_PIERCE}},
+    {LOCKBEARER, {LOCKBEARER, "Lockbearer", 10, 6, 4, INSPIRE, DEFENSE_ONLY}},
+
+    {URUK, {URUK, "Uruk-Hai", 3, 4, 1} },
+    {ORC, {ORC, "Orc", 2, 3, 0}},
+    {BATTERING_RAM, {BATTERING_RAM, "Battering Ram", 2, 8, 1, SURPRISE, ATTACK_ONLY}},
+    {FELGROM, {FELGROM, "Felgrom", 1, 10, 1, KAMIKAZE, ATTACK_ONLY}},
+};
+
+std::map<CardID, int> Board::playerDeckRegistry = {
+    {STRIDER, 2},
+    {ELVEN_PRINCE, 2},
+    {RECRUIT, 10},
+    {ELVEN_SOLDIER, 5},
+    {LOCKBEARER, 2},
+};
+
+std::map<CardID, int> Board::enemyDeckRegistry = {
+    {URUK, 10},
+    {ORC, 20},
+    {BATTERING_RAM, 2},
+    {FELGROM, 1},
 };
 
 Card::Card(CardType type) : type(type) {
@@ -156,6 +177,7 @@ bool Board::playCard(bool isPlayer, int cardIndex, int pos) {
     std::vector<Card*>& targetCards = isPlayer ? this->playerCards : this->enemyCards;
     std::vector<Card*>& handCards = isPlayer ? this->playerHand : this->enemyHand;
 
+    // Check if the position is valid
     if (pos < 0 || pos >= 5) {
         std::cout << "Invalid position\n";
         return false;
@@ -169,8 +191,7 @@ bool Board::playCard(bool isPlayer, int cardIndex, int pos) {
         return false;
     }
 
-    // TODO: Detect for "surprise" cards on opposite side
-
+    // All conditions met. Play card.
     targetCards[pos] = handCards[cardIndex];
     handCards.erase(handCards.begin() + cardIndex);
     return true;
@@ -183,26 +204,19 @@ Director::Director() : board() {
 
 void Director::initializeDecks() {
 
-    auto playerAdd = [this](CardID id) {
-        this->board.playerDeck.push_back(new Card(Board::cardRegistry[id]));
-        };
-    auto enemyAdd = [this](CardID id) {
-        this->board.enemyDeck.push_back(new Card(Board::cardRegistry[id]));
-        };
-
     this->board.playerDeck.clear();
     this->board.enemyDeck.clear();
 
-    playerAdd(ARAGORN);
-    playerAdd(ELVEN_SON);
-    for (int i = 0; i < 10; i++) {
-        playerAdd(RECRUIT);
+    for (const auto& card : Board::playerDeckRegistry) {
+        for (int i = 0; i < card.second; i++) {
+            this->board.playerDeck.push_back(new Card(Board::cardRegistry.at(card.first)));
+        }
     }
 
-    enemyAdd(BATTERING_RAM);
-    for (int i = 0; i < 10; i++) {
-        enemyAdd(URUK);
-        enemyAdd(ORC);
+    for (const auto& card : Board::enemyDeckRegistry) {
+        for (int i = 0; i < card.second; i++) {
+            this->board.enemyDeck.push_back(new Card(Board::cardRegistry.at(card.first)));
+        }
     }
 }
 
@@ -213,8 +227,8 @@ void Director::startGame() {
     this->shuffleDeck(false);
 
     // Draw Cards
-    this->drawCards(true, 5);
-    this->drawCards(false, 5);
+    this->drawCards(true, maxCards);
+    this->drawCards(false, maxCards);
 }
 void Director::endGame() {
     std::cout << "Game ended\n";
@@ -222,21 +236,60 @@ void Director::endGame() {
 
 void Director::shuffleDeck(bool isPlayer) {
     std::vector<Card*>* deck = isPlayer ? &this->board.playerDeck : &this->board.enemyDeck;
-    std::random_shuffle(deck->begin(), deck->end());
+    std::mt19937 rng(std::random_device{}());
+    std::shuffle(deck->begin(), deck->end(), rng);
 }
 
 bool Director::playCard(bool isPlayer, int cardIndex, int pos) {
+    Card* card = isPlayer ? this->board.playerHand[cardIndex] : this->board.enemyHand[cardIndex];
 
     // Detect if the card is placed on defense or not. On defense, cards can only be placed to block other cards
     if ((isPlayer && !first) || (!isPlayer && first)) {
         Card* oppositeCard = isPlayer ? board.enemyCards[pos] : board.playerCards[pos];
-        if (oppositeCard == nullptr) { // No attacking card
+
+        // Check if card has ATTACK_ONLY condition
+        if (card->getType().condition == ATTACK_ONLY) {
+            std::cout << "Cannot play card with ATTACK_ONLY condition on defense\n";
+            return false;
+        }
+
+        // No attacking card. On defense, cards can only be placed to block other cards
+        if (oppositeCard == nullptr) {
             std::cout << "No attacking card\n";
+            return false;
+        }
+
+        // Check if attacking card has the SURPRISE special ability
+        else if (oppositeCard->getType().special == SURPRISE) {
+            std::cout << "Cannot play card on defense against attacking card with SURPRISE special ability\n";
+            return false;
+        }
+    }
+    else { // On attack, cards can be placed anywhere
+        // Check if card has DEFENSE_ONLY condition
+        if (card->getType().condition == DEFENSE_ONLY) {
+            std::cout << "Cannot play card with DEFENSE_ONLY condition on attack\n";
             return false;
         }
     }
 
+
     if (this->board.playCard(isPlayer, cardIndex, pos)) {
+
+        // Card played successfully. Apply special abilities if any
+        switch (card->getType().special) {
+        case INSPIRE: {
+            std::cout << "Inspiring card played\n";
+            // Apply the INSPIRE special ability
+            for (int i = 0; i < 5; i++) {
+                if (this->board.playerCards[i] != nullptr) {
+                    this->board.playerCards[i]->attack += 1;
+                }
+            }
+            break;
+        }
+        }
+
         return true;
     }
     else {
@@ -245,11 +298,48 @@ bool Director::playCard(bool isPlayer, int cardIndex, int pos) {
     }
 }
 
+void Director::discardCard(bool isPlayer, int cardIndex) {
+    std::vector<Card*>& hand = isPlayer ? this->board.playerHand : this->board.enemyHand;
+    if (cardIndex < 0 || cardIndex >= hand.size()) {
+        std::cout << "Invalid card index\n";
+        return;
+    }
+
+    // Remove from the board
+    std::vector<Card*>& targetCards = isPlayer ? this->board.playerCards : this->board.enemyCards;
+    targetCards[cardIndex] = nullptr;
+
+    // Add back to bottom of the deck
+    std::vector<Card*>& deck = isPlayer ? this->board.playerDeck : this->board.enemyDeck;
+    deck.push_back(hand[cardIndex]);
+
+    // Remove from hand
+    hand.erase(hand.begin() + cardIndex);
+}
+
 void Director::drawCards(bool isPlayer, int targetCards) {
     std::vector<Card*>& deck = isPlayer ? this->board.playerDeck : this->board.enemyDeck;
     std::vector<Card*>& hand = isPlayer ? this->board.playerHand : this->board.enemyHand;
     while (hand.size() < targetCards && !deck.empty()) {
         drawCard(isPlayer);
+    }
+}
+
+void Director::applyAssaultAbilities(Card* attacker, Card* defender) {
+    switch (attacker->getType().special) {
+    case ARMOR_PIERCE: {
+        std::cout << "Armor Pierce card played\n";
+        // Apply the ARMOR_PIERCE special ability
+        defender->defense = 0; // Set enemy card's defense to 0
+        break;
+    };
+    case KAMIKAZE: {
+        std::cout << "Kamikaze card played\n";
+        // Apply the KAMIKAZE special ability
+        attacker->currHealth = 0; // Destroy the card
+        break;
+    };
+    default: break;
     }
 }
 
@@ -271,16 +361,15 @@ bool Director::turnAttack() {
             continue;
         }
 
-        applySpecialAbilities(playerCard, enemyCard); // Apply special abilities if any
+        applyAssaultAbilities(playerCard, enemyCard); // Apply assault special abilities if any
+        applyAssaultAbilities(enemyCard, playerCard);
         playerCard->currHealth -= std::max(0, enemyCard->attack - playerCard->defense);
         enemyCard->currHealth -= std::max(0, playerCard->attack - enemyCard->defense);
         if (playerCard->currHealth <= 0) {
-            delete playerCard;
-            this->board.playerCards[i] = nullptr;
+            discardCard(true, i);
         }
         if (enemyCard->currHealth <= 0) {
-            delete enemyCard;
-            this->board.enemyCards[i] = nullptr;
+            discardCard(false, i);
         }
 
         // Reset the attack and defense values for the next turn, in case they've changed
@@ -294,6 +383,11 @@ bool Director::turnAttack() {
         return true;
     }
     else {
+        board.playerHealth = std::max(0, board.playerHealth);
+        board.enemyHealth = std::max(0, board.enemyHealth);
         return false;
     }
+
+    shuffleDeck(true);
+    shuffleDeck(false);
 }

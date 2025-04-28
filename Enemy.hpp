@@ -1,7 +1,7 @@
 /*
 This file defines the Enemy AI for the game. The AI is responsible for making decisions on which cards to play and when to attack.
 */
-
+#pragma once
 
 #include "Game.hpp"
 

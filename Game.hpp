@@ -3,35 +3,62 @@ Game.hpp defines the general rules and functionality of the card game by itself.
 For game rules, see Rules.txt
 */
 
-
 #pragma once
 
 #include <string>
 #include <vector>
 #include <map>
 
-typedef enum CardID {
-    // Player
-    ARAGORN,
-    ELVEN_SON,
-    RECRUIT,
+enum CardID {
+    BLANK = -1, // Blank card
 
+    // Player
+    STRIDER,
+    ELVEN_PRINCE, // Legolas
+    RECRUIT,
+    ELVEN_SOLDIER,
+    LOCKBEARER, // Gimli, in case I forget
 
     // Enemy
     URUK,
     ORC,
     BATTERING_RAM,
-} CardID;
+    FELGROM,
+};
+
+enum SpecialAbility {
+    NONE,
+
+    // Abilities that are applied when played.
+    SURPRISE,
+    INSPIRE,
+
+    // Abilities that are applied during assault.
+    ARMOR_PIERCE,
+    KAMIKAZE,
+};
+
+enum PlayCondition {
+    FREE,
+    ATTACK_ONLY,
+    DEFENSE_ONLY,
+};
+
 
 /**
  * @brief The CardType struct defines the attributes of a card type.
- * It contains the name, max health, attack, and defense of the card.
+ * It contains the name, max health, attack, defense, and special ability of the card (if any).
  * These attributes are used to create a card instance, and are not changed during the game.
  * With this being said, game logic can temporarily change these stats. For example, buffing a card may increase its attack or defense for a turn.
  */
 typedef struct CardType {
-    std::string name;
-    int maxHealth, attack, defense;
+    CardID id = BLANK; // Default
+    std::string name = "NULL"; // Default to Strider
+    int maxHealth = 0;
+    int attack = 0;
+    int defense = 0;
+    SpecialAbility special = NONE; // Default none
+    PlayCondition condition = FREE; // Default free
 } CardType;
 
 class Card {
@@ -72,6 +99,8 @@ public:
     void drawCard(bool isPlayer);
     bool playCard(bool isPlayer, int cardIndex, int pos);
 
+    const static std::map<CardID, CardType>& getCardRegistry() { return cardRegistry; }
+
 private:
     friend class Director;
 
@@ -84,6 +113,8 @@ private:
     std::vector<Card*> enemyDeck; // Cards in deck
     std::vector<Card*> playerDeck;
     static std::map<CardID, CardType> cardRegistry;
+    static std::map<CardID, int> playerDeckRegistry;
+    static std::map<CardID, int> enemyDeckRegistry;
 };
 
 
@@ -101,6 +132,7 @@ public:
      * true = Player's turn first, false = Enemy's turn first.
      */
     bool first = true;
+    inline static const int maxCards = 7; // Max cards in hand. Players will draw until they have this many cards in hand after every round.
 
     Director();
 
@@ -110,12 +142,19 @@ public:
 
     void shuffleDeck(bool isPlayer);
     bool playCard(bool isPlayer, int cardIndex, int pos);
+    void discardCard(bool isPlayer, int cardIndex);
     void drawCard(bool isPlayer) {
         this->board.drawCard(isPlayer);
     }
-    void drawCards(bool isPlayer, int targetCards);
+    void drawCards(bool isPlayer, int targetCards = maxCards);
 
-    void applySpecialAbilities(Card* playerCard, Card* enemyCard) {}
+    /**
+     * @brief applyAssaultAbilities applies the special abilities of the attacking and defending cards.
+     * Specifically, it applies special abilities that are applied during the Assault phase. See game rules for more details.
+     * @param attacking The card that is attacking the defending card.
+     * @param defending The defending card that is being attacked.
+     */
+    void applyAssaultAbilities(Card* attacking, Card* defending);
 
     /**
      * @brief turnAttack simulates the Assault phase of each round (see game rules for more details).

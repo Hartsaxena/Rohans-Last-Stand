@@ -5,12 +5,10 @@
 #include "Game.hpp"
 
 
-
 void EnemyAI::turn() {
 
     // Draw cards
-    // The enemy will draw cards until it has 5 cards in hand.
-    game->drawCards(false, 5);
+    game->drawCards(false);
 
     if (!first) {
         attack();
@@ -45,7 +43,7 @@ void EnemyAI::defend() {
             std::cout << "EnemyAI: Defending against player card in position " << i + 1 << "\n";
             int cardIndex = rand() % hand.size();
             if (game->playCard(false, cardIndex, i)) {
-                std::cout << "Enemy played " << hand[cardIndex]->getType().name << " in position " << i + 1 << "\n";
+                std::cout << "Enemy played " << cards[i]->getType().name << " in position " << i + 1 << "\n";
             }
         }
     }
