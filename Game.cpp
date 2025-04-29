@@ -270,7 +270,7 @@ bool Director::playCard(bool isPlayer, int cardIndex, int pos) {
         }
 
         // Check if attacking card has the SURPRISE special ability
-        else if (oppositeCard->getType().special == SURPRISE) {
+        else if (oppositeCard->getType().special == SURPRISE && card->getType().condition == DEFENSE_ONLY) {
             std::cout << "Cannot play card on defense against attacking card with SURPRISE special ability\n";
             return false;
         }
@@ -311,9 +311,9 @@ bool Director::playCard(bool isPlayer, int cardIndex, int pos) {
                 ? board.playerHand
                 : board.enemyHand;
 
-            // Add 1× Eomer
+            // Add 1Ã— Eomer
             hand.push_back(new Card(registry.at(EOMER)));
-            // Add 2× Cavalry
+            // Add 2Ã— Cavalry
             hand.push_back(new Card(registry.at(CAVALRY)));
             hand.push_back(new Card(registry.at(CAVALRY)));
             break;
@@ -378,6 +378,7 @@ void Director::applyAssaultAbilities(Card* attacker, Card* defender) {
         std::cout << "Hate card applied\n";
         // Apply the HATE special ability
         switch (defender->getType().id) {
+        case CAVALRY:
         case RECRUIT:
             attacker->attack += 1;
             break;
