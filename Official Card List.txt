@@ -1,109 +1,106 @@
-
 ***----Official Card List----***
 
 1. Strider
-Health: 7   Attack: 7   Defense: 2
+Health: 7   Attack: 7    Defense: 2
 Special Ability: Inspire
 Description: Ranger of the North and heir to Gondor, Strider's presence galvanizes the defenders of Helm's Deep.
 
 2. Elven Prince
-Health: 4   Attack: 9   Defense: 0
+Health: 4   Attack: 9    Defense: 0
 Special Ability: Armor Pierce
 Description: A swift Elven archer whose arrows find gaps in enemy shields, raining down precision strikes on the orcs.
 
 3. Recruit
-Health: 3   Attack: 2   Defense: 2
+Health: 3   Attack: 2    Defense: 2
 Special Ability: None
 Description: Freshly enlisted Rohirrim foot soldiers, holding the wall with steady resolve.
 
 4. Elf Soldier
-Health: 4   Attack: 4   Defense: 0
+Health: 4   Attack: 4    Defense: 0
 Special Ability: Armor Pierce
 Description: Elven warriors of Lothlórien, their blades slicing through orcish armor in swift charges.
 
 5. Lockbearer
-Health: 10   Attack: 6   Defense: 4
+Health: 10  Attack: 6    Defense: 4
 Special Ability: Inspire
 Description: The dwarf Gimli at Helm's Deep, his stout defense and rallying cry bolster nearby allies.
 
 6. The White
-Health: 24   Attack: 8   Defense: 0
+Health: 24  Attack: 8    Defense: 0
 Special Ability: Reinforce
 Description: Gandalf the White arrives on Shadowfax, calling forth reinforcements at the critical moment.
 
 7. The King
-Health: 9   Attack: 5   Defense: 5
+Health: 9   Attack: 5    Defense: 5
 Special Ability: Inspire
 Description: King Théoden stands atop the walls of Helm's Deep, instilling hope and vigor in his soldiers.
 
 8. Eomer
-Health: 5   Attack: 6   Defense: 2
+Health: 5   Attack: 6    Defense: 2
 Special Ability: Inspire
 Description: Marshal of the Riddermark, sweeping into the fray to inspire Rohirrim allies.
 
 9. Cavalry
-Health: 5   Attack: 5   Defense: 2
+Health: 5   Attack: 5    Defense: 2
 Special Ability: Surprise
 Description: Rohirrim horsemen bursting through enemy lines with a thunderous charge.
 
 10. Uruk-Hai
-Health: 3   Attack: 4   Defense: 1
+Health: 3   Attack: 5    Defense: 1
 Special Ability: None
 Description: Hardy Uruk-Hai invaders, storming the fortress walls in relentless waves.
 
 11. Orc
-Health: 3   Attack: 3   Defense: 0
+Health: 3   Attack: 4    Defense: 0
 Special Ability: None
 Description: Foot soldiers of Mordor, swarming the defenses with crude weapons.
 
 12. Dunlending
-Health: 3   Attack: 2   Defense: 1
+Health: 3   Attack: 3    Defense: 1
 Special Ability: Hate
 Description: Tribal warriors fueled by hatred of the Rohirrim, striking harder against any Rohan card.
 
 13. Berserker
-Health: 9   Attack: 5   Defense: 3
+Health: 9   Attack: 6    Defense: 3
 Special Ability: Rally
 Description: Wild Dunlending berserkers whose savage war-cry spurs their comrades into fury.
 
 14. Battering Ram
-Health: 2   Attack: 8   Defense: 1
+Health: 2   Attack: 10   Defense: 1
 Special Ability: Surprise
 Description: Siege engine that crashes into the gate unexpectedly, catching any defenders off-guard.
 
 15. Felgrom
-Health: 1   Attack: 10   Defense: 1
+Health: 1   Attack: 0    Defense: 20
 Special Ability: Kamikaze
 Description: Fanatical orc warrior that sacrifices himself in a desperate assault to breach the defenses.
 
+--- Special Abilities ---
 
-
- --- Special Abilities ---
-
-Inspire
-Effect: When played, all friendly cards on the board gain +1 attack.
+Inspire  
+Effect: When played, all friendly cards on the board gain +1 attack.  
 Lore: A ray of light seems to pierce the clouds, empowering allies.
 
-Surprise
-Effect: Attacking cards cannot be blocked; defenders cannot respond to surprise assaults.
+Surprise  
+Effect: Attacking cards cannot be blocked; defenders cannot respond to surprise assaults.  
 Lore: A sudden onslaught breaks through the enemy's guard, sowing panic.
 
-Reinforce
-Effect: When played, adds one Eomer card and two Cavalry cards to the player's hand.
+Reinforce  
+Effect: When played, adds one Eomer card and two Cavalry cards to the player's hand.  
 Lore: A clarion call for reinforcements echoes across the battlefield.
 
-Rally
-Effect: When played, all friendly cards on the board gain +1 attack.
+Rally  
+Effect: When played, all friendly cards on the board gain +1 attack.  
 Lore: A thunderous war-cry that emboldens comrades to fight with renewed ferocity.
 
-Armor Pierce
-Effect: On assault, the card ignores the target's defense (defense is treated as zero).
+Armor Pierce  
+Effect: On assault, the card ignores the target's defense (defense is treated as zero).  
 Lore: A precise strike that finds the chinks in an opponent's armor.
 
-Hate
-Effect: On assault, gains +1 attack when targeting a Recruit; +2 attack when targeting The King.
+Hate  
+Effect: On assault, gains +1 attack when targeting a Recruit; +2 attack when targeting The King.  
 Lore: A burning fury that intensifies when facing noble or despised foes.
 
-Kamikaze
-Effect: On assault, this card destroys itself after attacking (health drops to zero).
+Kamikaze  
+Effect: On assault, this card destroys both itself and the opposing card (health drops to zero).
 Lore: A final, desperate charge where self-sacrifice is the only path to victory.

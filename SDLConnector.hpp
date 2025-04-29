@@ -9,6 +9,7 @@
 #include "Front.hpp"
 #include "Game.hpp"
 #include "Enemy.hpp"
+#include "Menu.hpp"
 #include "Colors.hpp"
 
 enum Scene {
@@ -18,79 +19,6 @@ enum Scene {
     SETTINGS
 };
 
-class Button : public Rectangle {
-public:
-    /**
-     * @brief Buttons (in this game) are rectangles that can be clicked.
-     * @param x X position of the button.
-     * @param y Y position of the button.
-     * @param w Width of the button.
-     * @param h Height of the button.
-     * @param color Color of the button.
-     */
-    Button(int x, int y, int w, int h, Color color = CLEAR)
-        : Rectangle(x, y, w, h, color) {
-    }
-
-    /**
-     * @brief Checks if the button is clicked.
-     * @param mx X position of the mouse.
-     * @param my Y position of the mouse.
-     * @return True if the mouse is inside the button, false otherwise.
-     */
-    bool collision(int mx, int my) const {
-        return (mx >= x && mx <= x + w &&
-            my >= y && my <= y + h);
-    }
-
-    void setColor(Color color) {
-        this->color = color;
-    }
-
-    virtual void render(Canvas* canvas) {
-        canvas->drawRect(this);
-    }
-};
-
-class RenderableButton : public Button {
-public:
-    std::string text;
-    Color defaultColor;
-    Color hoveredColor;
-    Color borderColor = BLACK;
-    Color textColor = OFFWHITE;
-    Color textHoverColor = OFFWHITE; // Color of the text when hovered
-    bool hovered = false;
-
-    Font* font = nullptr; // Font for rendering text
-
-    explicit RenderableButton(int x, int y, int w, int h, Color defaultColor = MEDIUM_BLUE, Color hoveredColor = MEDIUM_GREEN)
-        : Button(x, y, w, h, defaultColor),
-        defaultColor(defaultColor),
-        hoveredColor(hoveredColor)
-    {
-    }
-
-    void addText(const std::string& text, Font* font) {
-        this->text = text;
-        this->font = font;
-    }
-
-    void changeText(const std::string& text) {
-        this->text = text;
-    }
-    void changeFont(Font* font) {
-        this->font = font;
-    }
-    void changeTextColor(Color color) {
-        this->textColor = color;
-    }
-    void changeTextHoverColor(Color color) {
-        this->textHoverColor = color;
-    }
-
-    void render(Canvas* canvas) override;
-};
 
 class CardGraphic : public Button {
 public:
@@ -173,7 +101,8 @@ private:
     InputManager inputter;
     SDL_Texture* backgroundTexture;
     Font font;
-    Scene scene = GAME;
+    Scene scene = MAIN_MENU;
+    MainMenu menu;
 
     // Game flow members
     bool gameStateChange = false;
@@ -186,6 +115,7 @@ private:
     RenderableButton* assaultButton;
     TextBox* playerHealthCounter;
     TextBox* enemyHealthCounter;
+    TextBox* turnTypeTextBox;
 
     // Helper members
     int& xDimension = canvas.xDimension;

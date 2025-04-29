@@ -207,7 +207,8 @@ SDLConnector::SDLConnector(int xDimension, int yDimension, int fps, const std::s
     inputter(),                                  // Initialize InputManager
     font("Middle-Earth.ttf", 25),                // Initialize Font
     game(),                                      // Initialize Director
-    enemy(&game)                                 // Initialize EnemyAI
+    enemy(&game),                                // Initialize EnemyAI
+    menu(&canvas, &frontend, &inputter)         // Initialize MainMenu
 {
     CardGraphic::loadTextures(frontend.renderer); // Load card textures
     if (!loadBackgroundTexture()) {
@@ -223,12 +224,16 @@ SDLConnector::SDLConnector(int xDimension, int yDimension, int fps, const std::s
     assaultButton->changeTextColor(BLACK);
     assaultButton->changeTextHoverColor(MEDIUM_RED);
 
-    playerHealthCounter = new TextBox(50, yDimension - 100 - 100, 150, 80,
+    playerHealthCounter = new TextBox(50, yDimension - 200, 150, 80,
         "HP: " + std::to_string(game.getPlayerHealth()), &font,
         MEDIUM_GREEN);
     enemyHealthCounter = new TextBox(50, 100, 150, 80,
         "HP: " + std::to_string(game.getEnemyHealth()), &font,
         MEDIUM_GREEN);
+
+    turnTypeTextBox = new TextBox(xDimension - 200 - 50, yDimension - 200, 200, 80,
+        "Attacking", &font,
+        GRAY);
 
     resetGraphics(); // Reset cardGraphics
 }
@@ -247,6 +252,7 @@ SDLConnector::~SDLConnector() {
     delete assaultButton;
     delete playerHealthCounter;
     delete enemyHealthCounter;
+    delete turnTypeTextBox;
 
     // Tear down SDL
     TTF_Quit();
@@ -268,7 +274,13 @@ bool SDLConnector::tick() {
 }
 
 bool SDLConnector::menuTick() {
-    return true; // For later
+    bool isRunning = menu.tick();
+    if (menu.isPlay()) {
+        std::cout << "Starting Game\n";
+        scene = GAME;
+    }
+
+    return isRunning;
 }
 
 bool SDLConnector::gameTick() {
@@ -525,6 +537,14 @@ void SDLConnector::renderUI() {
     lockButton->render(&canvas);
     canvas.drawTextBox(playerHealthCounter);
     canvas.drawTextBox(enemyHealthCounter);
+
+    if (game.first) {
+        turnTypeTextBox->setText("Attacking");
+    }
+    else {
+        turnTypeTextBox->setText("Defending");
+    }
+    canvas.drawTextBox(turnTypeTextBox);
 }
 
 void SDLConnector::resetGraphics() {

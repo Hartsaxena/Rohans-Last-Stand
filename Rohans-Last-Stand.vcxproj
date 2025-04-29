@@ -23,6 +23,7 @@
     <ClInclude Include="Enemy.hpp" />
     <ClInclude Include="Front.hpp" />
     <ClInclude Include="Game.hpp" />
+    <ClInclude Include="Menu.hpp" />
     <ClInclude Include="Render.hpp" />
     <ClInclude Include="SDLConnector.hpp" />
   </ItemGroup>
@@ -31,6 +32,7 @@
     <ClCompile Include="Front.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="SDLConnector.cpp" />
   </ItemGroup>
@@ -157,10 +159,12 @@
       <Command>xcopy /Y /D "$(ProjectDir)DLLs\*.dll" "$(OutDir)"
 xcopy /Y /E /I "$(ProjectDir)Cards\*" "$(OutDir)Cards\"
 xcopy /Y "$(ProjectDir)bg.png" "$(OutDir)"
-xcopy /Y "$(ProjectDir)Middle-Earth.ttf" "$(OutDir)"</Command>
+xcopy /Y "$(ProjectDir)Middle-Earth.ttf" "$(OutDir)"
+xcopy /Y "$(ProjectDir)Rules.txt" "$(OutDir)"
+xcopy /Y "$(ProjectDir)Official Card List.txt" "$(OutDir)"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
-      <Message>Copy DLL files to output directory</Message>
+      <Message>Copying resources to output directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -189,10 +193,12 @@ xcopy /Y "$(ProjectDir)Middle-Earth.ttf" "$(OutDir)"</Command>
       <Command>xcopy /Y /D "$(ProjectDir)DLLs\*.dll" "$(OutDir)"
 xcopy /Y /E /I "$(ProjectDir)Cards\*" "$(OutDir)Cards\"
 xcopy /Y "$(ProjectDir)bg.png" "$(OutDir)"
-xcopy /Y "$(ProjectDir)Middle-Earth.ttf" "$(OutDir)"</Command>
+xcopy /Y "$(ProjectDir)Middle-Earth.ttf" "$(OutDir)"
+xcopy /Y "$(ProjectDir)Rules.txt" "$(OutDir)"
+xcopy /Y "$(ProjectDir)Official Card List.txt" "$(OutDir)"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
-      <Message>Copy DLL files to output directory</Message>
+      <Message>Copying resources to output directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

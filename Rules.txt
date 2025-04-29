@@ -1,4 +1,4 @@
-﻿Thank you for playing Rohan's Last Stand!  
+﻿﻿Thank you for playing Rohan's Last Stand!  
 Before you begin, please read the rules carefully.
 
 ---
@@ -33,28 +33,29 @@ Before you begin, please read the rules carefully.
 
 ## 4. Combat (Assault Phase)
 
-- Pairwise Battles: Each card attacks the opposing slot:  
-  - With Opponent’s Card: Damage = _Attacker ATK_ − _Defender DEF_ (min 0), then subtract from HP.  
+- Pairwise Battles: Each card attacks the opposing slot:
+  - With Opponent’s Card: Damage = _Attacker ATK_ − _Defender DEF_ (min 0), then subtract from the card's HP.  
+    If this damage exceeds the card’s remaining HP, the **overflow** (excess) is dealt to the opposing player’s Health.
   - Empty Slot: Damage goes directly to the opposing player’s Health.
 - Fatigue of War: If both deal 0 damage in a battle, both lose 1 HP instead.
 
 ## 5. Discarding & Shuffling
 
-- When a card’s HP ≤ 0 during Assault:  
+- When a card’s HP ≤ 0 during Assault:  
   1. Remove it from the board.  
   2. Place it on the bottom of its owner’s deck.  
 - Shuffle decks at the start of the game and after every Assault.
 
 ## 6. Special Abilities
 
-- Play‑Applied: Trigger upon playing (e.g., "Inspire" buffs allied cards immediately).  
-- Assault‑Applied: Trigger during Assault (e.g., "Armor Pierce" ignores defense before damage).  
+- Play-Applied: Trigger upon playing (e.g., "Inspire" buffs allied cards immediately).  
+- Assault-Applied: Trigger during Assault (e.g., "Armor Pierce" ignores defense before damage).  
 - See the official Card List for details on each ability.
 
 ## 7. Winning the Game
 
-- The first player to reduce their opponent’s Health to 0 wins the game.  
+- The first player to reduce their opponent’s Health to 0 wins the game.
 
 ---
 
-Enjoy your battle for Middle‑earth!
+Enjoy your battle for Middle-earth!  

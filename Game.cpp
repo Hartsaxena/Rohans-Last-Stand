@@ -26,19 +26,19 @@ std::map<CardID, CardType> Board::cardRegistry = {
     {EOMER, {EOMER, "Eomer", 5, 6, 2, INSPIRE}},
     {CAVALRY, {CAVALRY, "Cavalry", 5, 5, 2, SURPRISE}},
 
-    {URUK, {URUK, "Uruk-Hai", 3, 4, 1} },
-    {ORC, {ORC, "Orc", 3, 3, 0}},
-    {DUNLENDING, {DUNLENDING, "Dunlending", 3, 2, 1, HATE}},
-    {BERSERKER, {BERSERKER, "Berserker", 9, 5, 3, RALLY}},
-    {BATTERING_RAM, {BATTERING_RAM, "Battering Ram", 2, 8, 1, SURPRISE, ATTACK_ONLY}},
-    {FELGROM, {FELGROM, "Felgrom", 1, 10, 1, KAMIKAZE, ATTACK_ONLY}},
+    {URUK, {URUK, "Uruk-Hai", 3, 5, 1} },
+    {ORC, {ORC, "Orc", 3, 4, 0}},
+    {DUNLENDING, {DUNLENDING, "Dunlending", 3, 3, 1, HATE}},
+    {BERSERKER, {BERSERKER, "Berserker", 9, 6, 3, RALLY}},
+    {BATTERING_RAM, {BATTERING_RAM, "Battering Ram", 2, 10, 1, SURPRISE, ATTACK_ONLY}},
+    {FELGROM, {FELGROM, "Felgrom", 1, 0, 20, KAMIKAZE, ATTACK_ONLY}},
 };
 
 std::map<CardID, int> Board::playerDeckRegistry = {
     {STRIDER, 2},
     {ELVEN_PRINCE, 2},
-    {RECRUIT, 10},
-    {ELVEN_SOLDIER, 5},
+    {RECRUIT, 20},
+    {ELVEN_SOLDIER, 10},
     {LOCKBEARER, 2},
     {THE_WHITE, 1},
     {KING, 1}
@@ -46,7 +46,7 @@ std::map<CardID, int> Board::playerDeckRegistry = {
 
 std::map<CardID, int> Board::enemyDeckRegistry = {
     {URUK, 10},
-    {ORC, 20},
+    {ORC, 15},
     {DUNLENDING, 10},
     {BERSERKER, 8},
     {BATTERING_RAM, 2},
@@ -349,6 +349,12 @@ void Director::discardCard(bool isPlayer, int boardIndex) {
 
     // Put the card on the bottom of its owner's deck
     auto& deck = isPlayer ? board.playerDeck : board.enemyDeck;
+
+    // Reset stats
+    dead->attack = dead->getType().attack;
+    dead->currHealth = dead->getType().maxHealth;
+    dead->defense = dead->getType().defense;
+
     deck.push_back(dead);
 }
 
@@ -387,6 +393,7 @@ void Director::applyAssaultAbilities(Card* attacker, Card* defender) {
         std::cout << "Kamikaze card applied\n";
         // Apply the KAMIKAZE special ability
         attacker->currHealth = 0; // Destroy the card
+        defender->currHealth = 0; // Destroy the defending card
         break;
     };
     default: break;
@@ -398,32 +405,50 @@ bool Director::turnAttack() {
         Card* enemyCard = this->board.enemyCards[i];
         Card* playerCard = this->board.playerCards[i];
 
+        // Nothing in this slot
         if (enemyCard == nullptr && playerCard == nullptr) {
-            continue; // Skip if both cards are null
+            continue;
         }
 
+        // Enemy hits face-up
         if (playerCard == nullptr) {
             board.playerHealth -= enemyCard->attack;
             continue;
         }
+        // Player hits face-up
         else if (enemyCard == nullptr) {
             board.enemyHealth -= playerCard->attack;
             continue;
         }
 
-        applyAssaultAbilities(playerCard, enemyCard); // Apply assault special abilities if any
+        // Both cards present: apply special abilities first
+        applyAssaultAbilities(playerCard, enemyCard);
         applyAssaultAbilities(enemyCard, playerCard);
-        int dmgPlayerCard = std::max(0, enemyCard->attack - playerCard->defense);
-        int dmgEnemyCard = std::max(0, playerCard->attack - enemyCard->defense);
-        playerCard->currHealth -= dmgPlayerCard;
-        enemyCard->currHealth -= dmgEnemyCard;
 
-        if (dmgPlayerCard == 0 && dmgEnemyCard == 0) { // Cards are caught in a stalemate
+        // Calculate raw damage
+        int dmgToPlayerCard = std::max(0, enemyCard->attack - playerCard->defense);
+        int dmgToEnemyCard = std::max(0, playerCard->attack - enemyCard->defense);
+
+        // Record pre-damage health
+        int prevPlayerHP = playerCard->currHealth;
+        int prevEnemyHP = enemyCard->currHealth;
+
+        // Inflict damage on cards
+        playerCard->currHealth -= dmgToPlayerCard;
+        enemyCard->currHealth -= dmgToEnemyCard;
+
+        // Compute overflow (only if damage exceeded remaining card HP)
+        int overflowToPlayer = std::max(0, dmgToPlayerCard - prevPlayerHP);
+        int overflowToEnemy = std::max(0, dmgToEnemyCard - prevEnemyHP);
+
+        // Fatigue of war stalemate
+        if (dmgToPlayerCard == 0 && dmgToEnemyCard == 0) {
             std::cout << "Stalemate detected. Applying fatigue of war.\n";
             playerCard->currHealth -= 1;
             enemyCard->currHealth -= 1;
         }
 
+        // Remove dead cards
         if (playerCard->currHealth <= 0) {
             discardCard(true, i);
         }
@@ -431,22 +456,28 @@ bool Director::turnAttack() {
             discardCard(false, i);
         }
 
-        // Reset the attack and defense values for the next turn, in case they've changed
+        // Apply any spill-over to player/enemy health
+        if (overflowToPlayer > 0) board.playerHealth -= overflowToPlayer;
+        if (overflowToEnemy > 0) board.enemyHealth -= overflowToEnemy;
+
+        // Reset stats for next round
         enemyCard->attack = enemyCard->getType().attack;
         playerCard->attack = playerCard->getType().attack;
         enemyCard->defense = enemyCard->getType().defense;
         playerCard->defense = playerCard->getType().defense;
     }
 
+    shuffleDeck(true);
+    shuffleDeck(false);
+
+    // Check for game over
     if (board.playerHealth > 0 && board.enemyHealth > 0) {
         return true;
     }
     else {
+        // Clamp to zero
         board.playerHealth = std::max(0, board.playerHealth);
         board.enemyHealth = std::max(0, board.enemyHealth);
         return false;
     }
-
-    shuffleDeck(true);
-    shuffleDeck(false);
 }
