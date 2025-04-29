@@ -38,6 +38,7 @@
     <Font Include="Middle-Earth.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="Official Card List.txt" />
     <Text Include="Rules.txt" />
   </ItemGroup>
   <ItemGroup>

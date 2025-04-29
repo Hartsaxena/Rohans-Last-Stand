@@ -69,6 +69,7 @@
     <Text Include="Rules.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="Official Card List.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="cards\Strider.png">

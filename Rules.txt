@@ -1,36 +1,60 @@
-Thank you for playing Rohan's Last Stand! Before you begin, here are the rules of the game:
+﻿Thank you for playing Rohan's Last Stand!  
+Before you begin, please read the rules carefully.
 
-1. Each player starts with 20 health.
-2. Each player has a deck of cards, which are drawn from at the start of the game and during the game.
-3. Each player has a hand of cards, which are played onto the board.
-5. Most cards have 3 attributes - health, attack, and defense.
+---
 
-Attack and defense are used to calculate damage during an Assault, while health is used to determine if a card is destroyed.
-Some cards have another attribute - special abilities. These are used to determine how the card interacts with other cards.
-Examples include buffing, debuffing, and armor shredding.
+## 1. Game Setup
 
-4. Each player can play a card from their hand onto the board in an empty position.
-5. The players alternate turns before an Assault, playing as many cards as they want before passing their turn, allowing the other to play.
-6. After each player has played their cards, an Assault takes place.
-    The Assault is a battle between the two players, where each card on the board attacks the opposing card in the same position.
-    If there is no opposing card in that position, the card attacks the player's health directly.
-7. After an assault, both players shuffle their decks
-8. If a card's health reaches 0, it is removed from the board and placed back into the bottom of the deck.
-9. The game ends when one player's health reaches 0.
+- Starting Health: Each player begins with 20 Health.
+- Deck: Each player shuffles their owned deck, then draws 7 cards to form their starting hand.
 
+## 2. Turn Structure
 
-SPECIAL ABILITIES:
+1. Card Deployment Phase  
+   - Players alternate playing cards from hand onto empty board slots.  
+   - On Attack, you may play any card unless it has the DEFENSE_ONLY condition.  
+   - On Defense, you may only play on slots with an opponent’s card, and only if the card does not have the ATTACK_ONLY condition or is blocked by SURPRISE.
+2. End of Plays  
+   - When both players pass (or click “Finish”), the game enters the Assault Phase.
+3. Draw Phase  
+   - After Assault, shuffle each deck and draw until you have 7 cards.
+4. First Attacker Alternation  
+   - The player who did not attack first last round attacks first this round.
 
-Intro:
-    Many cards have special abilities that are automatically applied throughout the game. These vary from card to card.
-   
-   
-Special abilities are mainly split into two categories: Play-applied and Assault-applied.
+## 3. Card Attributes
 
-Play-applied:
-    These abilities are applied when the card is first played onto the board.
-    For example, a card with the ability "Inspire" will buff all other cards on the board when it is played.
+- Health (HP): When reduced to 0 or less, the card is discarded.  
+- Attack (ATK): Damage dealt when attacking.  
+- Defense (DEF): Reduces incoming damage.  
+- Play Condition:  
+  - FREE: Play anytime.  
+  - ATTACK_ONLY: Only on attack.  
+  - DEFENSE_ONLY: Only on defense.
 
-Assault Applied:
-    These abilities are applied every assault that the card participates in.
-    For example, a card with the ability "Armor Pierce" Will ignore the target's defense when attacking.
+## 4. Combat (Assault Phase)
+
+- Pairwise Battles: Each card attacks the opposing slot:  
+  - With Opponent’s Card: Damage = _Attacker ATK_ − _Defender DEF_ (min 0), then subtract from HP.  
+  - Empty Slot: Damage goes directly to the opposing player’s Health.
+- Fatigue of War: If both deal 0 damage in a battle, both lose 1 HP instead.
+
+## 5. Discarding & Shuffling
+
+- When a card’s HP ≤ 0 during Assault:  
+  1. Remove it from the board.  
+  2. Place it on the bottom of its owner’s deck.  
+- Shuffle decks at the start of the game and after every Assault.
+
+## 6. Special Abilities
+
+- Play‑Applied: Trigger upon playing (e.g., "Inspire" buffs allied cards immediately).  
+- Assault‑Applied: Trigger during Assault (e.g., "Armor Pierce" ignores defense before damage).  
+- See the official Card List for details on each ability.
+
+## 7. Winning the Game
+
+- The first player to reduce their opponent’s Health to 0 wins the game.  
+
+---
+
+Enjoy your battle for Middle‑earth!

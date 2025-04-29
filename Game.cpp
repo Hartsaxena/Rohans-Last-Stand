@@ -23,10 +23,13 @@ std::map<CardID, CardType> Board::cardRegistry = {
     {THE_WHITE, {THE_WHITE, "The White", 24, 8, 0, REINFORCE}},
     {KING, {KING, "The King", 9, 5, 5, INSPIRE}},
 
+    {EOMER, {EOMER, "Eomer", 5, 6, 2, INSPIRE}},
+    {CAVALRY, {CAVALRY, "Cavalry", 5, 5, 2, SURPRISE}},
+
     {URUK, {URUK, "Uruk-Hai", 3, 4, 1} },
     {ORC, {ORC, "Orc", 3, 3, 0}},
     {DUNLENDING, {DUNLENDING, "Dunlending", 3, 2, 1, HATE}},
-    {BERSERKER, {BERSERKER, "Berserker", 9, 5, 3, RALLY}}
+    {BERSERKER, {BERSERKER, "Berserker", 9, 5, 3, RALLY}},
     {BATTERING_RAM, {BATTERING_RAM, "Battering Ram", 2, 8, 1, SURPRISE, ATTACK_ONLY}},
     {FELGROM, {FELGROM, "Felgrom", 1, 10, 1, KAMIKAZE, ATTACK_ONLY}},
 };
@@ -209,7 +212,6 @@ Director::Director() : board() {
     this->startGame();
 }
 
-
 void Director::initializeDecks() {
 
     this->board.playerDeck.clear();
@@ -286,6 +288,7 @@ bool Director::playCard(bool isPlayer, int cardIndex, int pos) {
 
         // Card played successfully. Apply special abilities if any
         switch (card->getType().special) {
+        case RALLY: // Alias of the INSPIRE ability
         case INSPIRE: {
             std::cout << "Inspiring card played\n";
             // Apply the INSPIRE special ability
@@ -296,6 +299,28 @@ bool Director::playCard(bool isPlayer, int cardIndex, int pos) {
             }
             break;
         }
+
+        case REINFORCE: {
+            std::cout << "Reinforce card played\n";
+
+            // Look up card types
+            const auto& registry = Board::getCardRegistry();
+
+            // Decide whose hand to augment
+            auto& hand = isPlayer
+                ? board.playerHand
+                : board.enemyHand;
+
+            // Add 1× Eomer
+            hand.push_back(new Card(registry.at(EOMER)));
+            // Add 2× Cavalry
+            hand.push_back(new Card(registry.at(CAVALRY)));
+            hand.push_back(new Card(registry.at(CAVALRY)));
+            break;
+        }
+
+        default:
+            break;
         }
 
         return true;
@@ -306,23 +331,25 @@ bool Director::playCard(bool isPlayer, int cardIndex, int pos) {
     }
 }
 
-void Director::discardCard(bool isPlayer, int cardIndex) {
-    std::vector<Card*>& hand = isPlayer ? this->board.playerHand : this->board.enemyHand;
-    if (cardIndex < 0 || cardIndex >= hand.size()) {
-        std::cout << "Invalid card index\n";
+void Director::discardCard(bool isPlayer, int boardIndex) {
+    auto& slots = isPlayer ? board.playerCards : board.enemyCards;
+    if (boardIndex < 0 || boardIndex >= slots.size()) {
+        std::cout << "Invalid board index\n";
         return;
     }
 
-    // Remove from the board
-    std::vector<Card*>& targetCards = isPlayer ? this->board.playerCards : this->board.enemyCards;
-    targetCards[cardIndex] = nullptr;
+    Card* dead = slots[boardIndex];
+    if (dead == nullptr) {
+        std::cout << "No card to discard\n";
+        return;
+    }
 
-    // Add back to bottom of the deck
-    std::vector<Card*>& deck = isPlayer ? this->board.playerDeck : this->board.enemyDeck;
-    deck.push_back(hand[cardIndex]);
+    // Clear the board slot
+    slots[boardIndex] = nullptr;
 
-    // Remove from hand
-    hand.erase(hand.begin() + cardIndex);
+    // Put the card on the bottom of its owner's deck
+    auto& deck = isPlayer ? board.playerDeck : board.enemyDeck;
+    deck.push_back(dead);
 }
 
 void Director::drawCards(bool isPlayer, int targetCards) {
@@ -336,13 +363,28 @@ void Director::drawCards(bool isPlayer, int targetCards) {
 void Director::applyAssaultAbilities(Card* attacker, Card* defender) {
     switch (attacker->getType().special) {
     case ARMOR_PIERCE: {
-        std::cout << "Armor Pierce card played\n";
+        std::cout << "Armor Pierce card applied\n";
         // Apply the ARMOR_PIERCE special ability
         defender->defense = 0; // Set enemy card's defense to 0
         break;
     };
+    case HATE: {
+        std::cout << "Hate card applied\n";
+        // Apply the HATE special ability
+        switch (defender->getType().id) {
+        case RECRUIT:
+            attacker->attack += 1;
+            break;
+        case KING:
+            attacker->attack += 2;
+            break;
+        default:
+            break;
+        }
+        break;
+    };
     case KAMIKAZE: {
-        std::cout << "Kamikaze card played\n";
+        std::cout << "Kamikaze card applied\n";
         // Apply the KAMIKAZE special ability
         attacker->currHealth = 0; // Destroy the card
         break;
@@ -371,8 +413,17 @@ bool Director::turnAttack() {
 
         applyAssaultAbilities(playerCard, enemyCard); // Apply assault special abilities if any
         applyAssaultAbilities(enemyCard, playerCard);
-        playerCard->currHealth -= std::max(0, enemyCard->attack - playerCard->defense);
-        enemyCard->currHealth -= std::max(0, playerCard->attack - enemyCard->defense);
+        int dmgPlayerCard = std::max(0, enemyCard->attack - playerCard->defense);
+        int dmgEnemyCard = std::max(0, playerCard->attack - enemyCard->defense);
+        playerCard->currHealth -= dmgPlayerCard;
+        enemyCard->currHealth -= dmgEnemyCard;
+
+        if (dmgPlayerCard == 0 && dmgEnemyCard == 0) { // Cards are caught in a stalemate
+            std::cout << "Stalemate detected. Applying fatigue of war.\n";
+            playerCard->currHealth -= 1;
+            enemyCard->currHealth -= 1;
+        }
+
         if (playerCard->currHealth <= 0) {
             discardCard(true, i);
         }

@@ -21,6 +21,10 @@ enum CardID {
     THE_WHITE, // Gandalf
     KING, // Theoden
 
+    // Gandalf-specific reinforcements
+    EOMER,
+    CAVALRY,
+
     // Enemy
     URUK,
     ORC,
@@ -95,8 +99,8 @@ private:
  */
 class Board {
 public:
-    int enemyHealth = 20;
-    int playerHealth = 20;
+    int enemyHealth = 40;
+    int playerHealth = 40;
 
     Board();
     ~Board();

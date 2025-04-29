@@ -1,13 +1,11 @@
+// Enemy.cpp
 #include "Enemy.hpp"
 #include <iostream>
-#include <random>
 
 #include "Game.hpp"
 
-
 void EnemyAI::turn() {
-
-    // Draw cards
+    // Draw up to hand limit
     game->drawCards(false);
 
     if (!first) {
@@ -19,31 +17,43 @@ void EnemyAI::turn() {
 }
 
 void EnemyAI::attack() {
-    // For now, the enemy will play a random card in hand in the first empty position on the board.
+    // Fill every empty attack slot
+    for (int pos = 0; pos < cards.size(); ++pos) {
+        // Keep trying to play into this pos until either it's full or no playable cards remain
+        while (cards[pos] == nullptr) {
 
-    int cardIndex = rand() % hand.size();
-
-    int pos = 0;
-    while (game->playCard(false, cardIndex, pos) == false) {
-        pos++;
-        if (pos >= 5) {
-            std::cout << "EnemyAI: No empty positions available\n";
-            return;
+            bool played = false;
+            for (int i = 0; i < hand.size(); ++i) {
+                Card* c = hand[i];
+                // Skip cards that can't attack
+                if (c->getType().condition == DEFENSE_ONLY)
+                    continue;
+                if (game->playCard(false, i, pos)) {
+                    std::cout << "Enemy plays "
+                        << c->getType().name
+                        << " at slot " << pos + 1 << "\n";
+                    played = true;
+                    break;
+                }
+            }
+            if (!played) break;  // no more valid plays for this slot
         }
     }
-
-    std::cout << "Enemy played " << hand[cardIndex]->getType().name << " in position " << pos + 1 << "\n";
 }
 
 void EnemyAI::defend() {
-    // For now, the enemy will play a random card in hand to match any attackers
+    // Block any incoming attackers
+    for (int pos = 0; pos < playerCards.size(); pos++) {
+        if (playerCards[pos] == nullptr && cards[pos] != nullptr) {
+            // No need to defend if there's no attacker
+            continue;
+        }
 
-    for (int i = 0; i < 5; i++) {
-        if (playerCards[i] != nullptr) { // Found attacking card -> defend against it
-            std::cout << "EnemyAI: Defending against player card in position " << i + 1 << "\n";
-            int cardIndex = rand() % hand.size();
-            if (game->playCard(false, cardIndex, i)) {
-                std::cout << "Enemy played " << cards[i]->getType().name << " in position " << i + 1 << "\n";
+        for (int i = 0; i < hand.size(); ++i) {
+            if (game->playCard(false, i, pos)) {
+                std::cout << "Enemy defends slot " << pos + 1
+                    << " with " << hand[i]->getType().name << "\n";
+                break;
             }
         }
     }

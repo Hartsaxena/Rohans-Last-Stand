@@ -324,7 +324,7 @@ void SDLConnector::processClick(int mx, int my) {
                 std::cout << "Assault phase completed\n";
                 game.first = !game.first; // Switch turns
                 game.drawCards(true); // Draw until 7 cards are in hand;
-                if (game.first) {
+                if (!game.first) {
                     enemy.turn();
                 }
 
