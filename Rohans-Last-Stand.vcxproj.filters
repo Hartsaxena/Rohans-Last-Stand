@@ -101,5 +101,6 @@
     <None Include="DLLs\SDL2_ttf.dll">
       <Filter>DLLs</Filter>
     </None>
+    <None Include="README.md" />
   </ItemGroup>
 </Project>

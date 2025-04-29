@@ -53,6 +53,7 @@
     <None Include="DLLs\SDL2.dll" />
     <None Include="DLLs\SDL2_image.dll" />
     <None Include="DLLs\SDL2_ttf.dll" />
+    <None Include="README.md" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
