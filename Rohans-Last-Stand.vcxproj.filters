@@ -90,6 +90,9 @@
     <Image Include="Cards\Elf Soldier.png">
       <Filter>Resource Files\Card Images</Filter>
     </Image>
+    <Image Include="menubg.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="DLLs\SDL2.dll">

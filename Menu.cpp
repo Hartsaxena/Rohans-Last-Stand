@@ -1,4 +1,5 @@
 #include "Menu.hpp"
+#include "SDL_image.h"
 
 #include "Front.hpp"
 #include "Render.hpp"
@@ -11,26 +12,48 @@ MainMenu::MainMenu(Canvas* canvas, FrontendManager* frontend, InputManager* inpu
 {
     // Initialize remaining members
     font = new Font("Middle-Earth.ttf", 38);
+    smallFont = new Font("Middle-Earth.ttf", 25);
 
     int xDimension = frontend->getScreenX();
     int yDimension = frontend->getScreenY();
 
-    titleBox = new TextBox(xDimension / 2 - (450 / 2), yDimension / 2 - 300 - 50, 450, 100,
-        "Rohan's Last Stand", font, OFFWHITE, BLACK, BLACK);
+    // Load background texture
+    SDL_Surface* backgroundSurface = IMG_Load("menubg.png");
+    if (backgroundSurface == nullptr) {
+        std::cerr << "Failed to load background image: " << IMG_GetError() << "\n";
+        return;
+    }
+    backgroundTexture = SDL_CreateTextureFromSurface(canvas->renderer, backgroundSurface);
+    if (backgroundTexture == nullptr) {
+        std::cerr << "Failed to create background texture: " << SDL_GetError() << "\n";
+        return;
+    }
+    SDL_FreeSurface(backgroundSurface); // Free the surface after creating the texture
 
-    playButton = new RenderableButton(xDimension / 2 - 100, yDimension / 2 + 100, 200, 50,
-        GRAY, BLACK);
+    titleBox = new TextBox(xDimension / 2 - (450 / 2), yDimension / 2 - 300 - 50, 450, 100,
+        "Rohan's Last Stand", font, BROWN, GRAY, BLACK);
+
+    versionBox = new TextBox(xDimension / 2 - (300 / 2), yDimension / 2 - 250, 300, 50,
+        "v1.0.0", smallFont, CLEAR, CLEAR, OFFWHITE);
+
+    playButton = new RenderableButton(xDimension / 2 - 175, yDimension / 2 + 120, 200, 60,
+        LIGHT_BROWN, BLACK);
     playButton->addText("Play", font);
 
-    exitButton = new RenderableButton(xDimension / 2 - 75, yDimension / 2 + 175, 150, 50,
+    exitButton = new RenderableButton(xDimension - 260, yDimension / 2 + 135, 150, 60,
         GRAY, MEDIUM_RED);
     exitButton->addText("Exit", font);
 }
 
 MainMenu::~MainMenu() {
     delete font;
+    delete smallFont;
+
+    delete titleBox;
+    delete versionBox;
     delete playButton;
     delete exitButton;
+    SDL_DestroyTexture(backgroundTexture);
 }
 
 bool MainMenu::tick() {
@@ -46,8 +69,15 @@ bool MainMenu::tick() {
     }
 
     // Render the menu
-    canvas->blankScreen();
+    canvas->fillScreenColor(DARK_BROWN);
+
+    SDL_Rect destRect = {
+        0, 0, frontend->getScreenX(), frontend->getScreenY()
+    };
+    SDL_RenderCopy(canvas->renderer, backgroundTexture, nullptr, &destRect);
+
     canvas->drawTextBox(titleBox);
+    canvas->drawTextBox(versionBox);
     playButton->render(canvas);
     exitButton->render(canvas);
 

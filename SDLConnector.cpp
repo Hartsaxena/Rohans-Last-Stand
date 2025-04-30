@@ -9,27 +9,6 @@
 #include "Game.hpp"
 
 
-void RenderableButton::render(Canvas* canvas) {
-    if (hovered) {
-        this->setColor(hoveredColor);
-    }
-    else {
-        this->setColor(defaultColor);
-    }
-
-    int borderSize = 2;
-    canvas->drawRect(x - borderSize, y - borderSize, w + (2 * borderSize), h + (2 * borderSize), borderColor);
-    canvas->drawRect(this);
-
-    if (font != nullptr) {
-        canvas->renderTextCenter(
-            text, font,
-            x + w / 2, y + h / 2,
-            hovered ? textColor : textHoverColor
-        );
-    }
-}
-
 void CardGraphic::render(Canvas* canvas) {
     if (card == nullptr) {
         std::cerr << "CardGraphic: No card to render\n";

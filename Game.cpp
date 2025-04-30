@@ -270,7 +270,7 @@ bool Director::playCard(bool isPlayer, int cardIndex, int pos) {
         }
 
         // Check if attacking card has the SURPRISE special ability
-        else if (oppositeCard->getType().special == SURPRISE && card->getType().condition == DEFENSE_ONLY) {
+        else if (oppositeCard->getType().special == SURPRISE && card->getType().condition != DEFENSE_ONLY) {
             std::cout << "Cannot play card on defense against attacking card with SURPRISE special ability\n";
             return false;
         }

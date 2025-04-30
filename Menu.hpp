@@ -16,8 +16,11 @@ private:
     FrontendManager* frontend;
     InputManager* inputter;
     Font* font;
+    Font* smallFont;
     Canvas* canvas;
+    SDL_Texture* backgroundTexture;
     TextBox* titleBox;
+    TextBox* versionBox;
     RenderableButton* playButton;
     RenderableButton* exitButton;
 

@@ -32,6 +32,27 @@ Font::Font(const std::string& fontPath, int size) {
     }
 }
 
+void RenderableButton::render(Canvas* canvas) {
+    if (hovered) {
+        this->setColor(hoveredColor);
+    }
+    else {
+        this->setColor(defaultColor);
+    }
+
+    int borderSize = 2;
+    canvas->drawRect(x - borderSize, y - borderSize, w + (2 * borderSize), h + (2 * borderSize), borderColor);
+    canvas->drawRect(this);
+
+    if (font != nullptr) {
+        canvas->renderTextCenter(
+            text, font,
+            x + w / 2, y + h / 2,
+            hovered ? textColor : textHoverColor
+        );
+    }
+}
+
 Canvas::Canvas(SDL_Renderer* renderer)
 {
     // Constructor

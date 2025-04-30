@@ -48,6 +48,7 @@
     <Image Include="Cards\Elf Soldier.png" />
     <Image Include="Cards\Recruit.png" />
     <Image Include="cards\Strider.png" />
+    <Image Include="menubg.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DLLs\SDL2.dll" />
@@ -160,7 +161,9 @@
       <Command>xcopy /Y /D "$(ProjectDir)DLLs\*.dll" "$(OutDir)"
 xcopy /Y /E /I "$(ProjectDir)Cards\*" "$(OutDir)Cards\"
 xcopy /Y "$(ProjectDir)bg.png" "$(OutDir)"
+xcopy /Y "$(ProjectDir)menubg.png" "$(OutDir)"
 xcopy /Y "$(ProjectDir)Middle-Earth.ttf" "$(OutDir)"
+xcopy /Y "$(ProjectDir)README.md" "$(OutDir)"
 xcopy /Y "$(ProjectDir)Rules.txt" "$(OutDir)"
 xcopy /Y "$(ProjectDir)Official Card List.txt" "$(OutDir)"</Command>
     </PostBuildEvent>
@@ -194,7 +197,9 @@ xcopy /Y "$(ProjectDir)Official Card List.txt" "$(OutDir)"</Command>
       <Command>xcopy /Y /D "$(ProjectDir)DLLs\*.dll" "$(OutDir)"
 xcopy /Y /E /I "$(ProjectDir)Cards\*" "$(OutDir)Cards\"
 xcopy /Y "$(ProjectDir)bg.png" "$(OutDir)"
+xcopy /Y "$(ProjectDir)menubg.png" "$(OutDir)"
 xcopy /Y "$(ProjectDir)Middle-Earth.ttf" "$(OutDir)"
+xcopy /Y "$(ProjectDir)README.md" "$(OutDir)"
 xcopy /Y "$(ProjectDir)Rules.txt" "$(OutDir)"
 xcopy /Y "$(ProjectDir)Official Card List.txt" "$(OutDir)"</Command>
     </PostBuildEvent>
